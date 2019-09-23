@@ -1,0 +1,20 @@
+#!/bin/sh
+set -e -u -o pipefail
+
+if [ -n "$SERVER" -a -n "$PROTOCOL" ]; then
+  set -- "$@" '--config' "/vpn/ovpn/config/ovpn_${PROTOCOL}/${SERVER}.nordvpn.com.${PROTOCOL}.ovpn"
+else
+  echo "No OpenVPN config found in /vpn/ovpn/config/ovpn_${PROTOCOL}/${SERVER}.nordvpn.com.${PROTOCOL}.ovpn. Exiting."
+  exit 1
+fi
+if [ -n "$USERNAME" -a -n "$PASSWORD" ]; then
+  echo "$USERNAME" > auth.conf
+  echo "$PASSWORD" >> auth.conf
+  chmod 600 auth.conf
+  set -- "$@" '--auth-user-pass' 'auth.conf'
+else
+  echo "OpenVPN credentials not set. Exiting."
+  exit 1
+fi
+
+openvpn "$@"

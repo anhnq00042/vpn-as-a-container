@@ -1,0 +1,26 @@
+version: '3.7'
+services:
+  vpncontainer:
+    image: jasper/vpncontainer:latest
+    build:
+      context: ./
+    container_name: vpncontainer
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    dns:
+      - 103.86.96.100
+      - 103.86.99.100
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    env_file: .env
+    networks:
+      - vpncontainer
+    ports:
+      - ${PROXY_PORT}:${PROXY_PORT}
+    restart: always
+
+networks:
+  vpncontainer:
+    name: vpncontainer

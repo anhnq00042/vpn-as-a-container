@@ -1,0 +1,17 @@
+#!/bin/sh
+sleep 10
+
+gw=$(ip route | awk '/default/ {print $3}')
+ip route add to ${LOCAL_NETWORK} via $gw dev eth0
+
+if [ -z "${PROXY_PORT}" ]; then
+  PROXY_PORT=3128
+fi
+count=$(grep -c "listen-address" /vpn/privoxy/config)
+if [ ${count} == 0 ]; then
+  echo "listen-address  0.0.0.0:${PROXY_PORT}" >> /vpn/privoxy/config
+fi
+
+
+# start
+privoxy --no-daemon
