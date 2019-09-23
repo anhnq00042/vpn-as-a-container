@@ -1,4 +1,4 @@
-# VPN as a Docker container
+# Proxy through VPN connection in a Docker container
 An Alpine Linux container with 
 
 - OpenVPN connection to NordVPN service
